@@ -28,7 +28,7 @@ import java.util.Iterator;
 
 
 public class ReadTable extends AppCompatActivity {
-    private ArrayList<File> fList = new ArrayList<File>();
+    private ArrayList<File> fList = new ArrayList<>();
     ArrayList<File> excels = new ArrayList<>();
     File f;
 
@@ -40,7 +40,13 @@ public class ReadTable extends AppCompatActivity {
 
 
         excels.clear();
+
+        // verzija >16 emulated
+
+
+
 //  f = new File("/storage/emulated/0");
+
    f = new File("/storage/sdcard0");
         File fc = f;
         fList.clear();
@@ -48,7 +54,7 @@ public class ReadTable extends AppCompatActivity {
         Log.i("proba 1", String.valueOf(f));
 
 
-        if (isExternalStorageAvailable()) {
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             f = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
             if (!(f.equals(fc))) {
                 fList.clear();
@@ -74,7 +80,7 @@ public class ReadTable extends AppCompatActivity {
                     estr.add(fl.getName());
                 }
                 ListView lv = (ListView) findViewById(R.id.excels);
-                ArrayAdapter<String> aa = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_activated_1, estr);
+                ArrayAdapter<String> aa = new ArrayAdapter<>(this, android.R.layout.simple_list_item_activated_1, estr);
                 lv.setAdapter(aa);
 
                 lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -113,7 +119,7 @@ public class ReadTable extends AppCompatActivity {
     private void readFileXLS(File file) {
 
         ArrayList<String> sList = new ArrayList<>();
-        HashMap<String, String> peopleMap = new HashMap();
+        HashMap<String, String> peopleMap = new HashMap<>();
         try {
             FileInputStream myInput = new FileInputStream(file);
             POIFSFileSystem myFileSystem = new POIFSFileSystem(myInput);
@@ -162,11 +168,4 @@ public class ReadTable extends AppCompatActivity {
         startActivity(new Intent(this, MainActivity.class));
     }
 
-    public static boolean isExternalStorageAvailable() {
-        String extStorageState = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(extStorageState)) {
-            return true;
-        }
-        return false;
-    }
 }
