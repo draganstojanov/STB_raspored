@@ -3,7 +3,6 @@ package com.andraganoid.stb_raspored;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -24,46 +23,75 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 
 public class ReadTable extends AppCompatActivity {
     private ArrayList<File> fList = new ArrayList<>();
     ArrayList<File> excels = new ArrayList<>();
     File f;
-
+String []root={"/storage","/storage/sdcard","/sdcard","/storage/sdcard0","/storage/sdcard1","/storage/emulated/0","/mnt/sdcard"};
 
     @Override
-    protected void onCreate( Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_read_table);
 
 
         excels.clear();
 
-        // verzija >16 emulated
-
-
-
-//  f = new File("/storage/emulated/0");
-
-   f = new File("/storage/sdcard0");
-        File fc = f;
-        fList.clear();
-        excels.addAll(getFile(f));
-        Log.i("proba 1", String.valueOf(f));
-
-
-        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-            f = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
-            if (!(f.equals(fc))) {
-                fList.clear();
-
-
-                excels.addAll(getFile(f));
-                Log.i("proba 2", String.valueOf(f));
+        for (String r:root) {
+            f = new File(r);
+            Log.i("proba files", String.valueOf(f)+(f.exists()));
+            if (f.exists()){ getFile(f);
             }
         }
+
+     /*  f = new File("/storage");
+        Log.i("proba files", String.valueOf(f)+(f.exists()));
+        if (f.exists()){ fList.clear();
+            excels.addAll(getFile(f));}
+
+        f = new File("/storage/sdcard");
+        Log.i("proba files", String.valueOf(f)+(f.exists()));
+        if (f.exists()){ fList.clear();
+            excels.addAll(getFile(f));}
+
+        f = new File("/storage/sdcard0");
+        Log.i("proba files", String.valueOf(f)+(f.exists()));
+        if (f.exists()){ fList.clear();
+            excels.addAll(getFile(f));}
+
+        f = new File("/storage/sdcard1");
+        Log.i("proba files", String.valueOf(f)+(f.exists()));
+        if (f.exists()){ fList.clear();
+            excels.addAll(getFile(f));}
+
+        f = new File("/storage/emulated/0");
+        Log.i("proba files", String.valueOf(f)+(f.exists()));
+        if (f.exists()){ fList.clear();
+            excels.addAll(getFile(f));}
+
+        f = new File("/mnt/sdcard");                            //4.1
+        Log.i("proba files", String.valueOf(f)+(f.exists()));
+        if (f.exists()){ fList.clear();
+            excels.addAll(getFile(f));}*/
+
+
+   /*     f = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+        Log.i("proba files", String.valueOf(f)+(f.exists()));
+        if (f.exists()){ fList.clear();
+            excels.addAll(getFile(f));}*/
+
+        //    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {f = new File("/storage/emulated/0"); }
+
+
+
+
+
 
 
         switch (excels.size()) {
@@ -74,11 +102,19 @@ public class ReadTable extends AppCompatActivity {
                 readFileXLS(excels.get(0));
                 break;
             default:
-                final ArrayList<String> estr = new ArrayList<>();
+                 Set<String> set = new HashSet<>();
                 for (File fl : excels
                         ) {
-                    estr.add(fl.getName());
+                    set.add(fl.getName());
                 }
+//                final ArrayList<String> estr= new ArrayList<>();
+//                for (String s:set) {
+//                    estr.add(s);
+//                }
+                List<String> estr =new ArrayList<> (set);
+
+
+
                 ListView lv = (ListView) findViewById(R.id.excels);
                 ArrayAdapter<String> aa = new ArrayAdapter<>(this, android.R.layout.simple_list_item_activated_1, estr);
                 lv.setAdapter(aa);
@@ -99,21 +135,29 @@ public class ReadTable extends AppCompatActivity {
     }
 
 
-    private ArrayList<File> getFile(File f) {
-       File[] files = f.listFiles();
-        Log.i("proba f", String.valueOf(files.length));
-        for (File file : files) {
-            if (file.isFile() && file.getName().contains("raspored")) {
-                fList.add(file);
+    private void getFile(File f) {
+        Log.i("proba f", String.valueOf(f));
 
-            } else if (file.isDirectory()) {
-                if (!file.isHidden()) {
-                    getFile(file.getAbsoluteFile());
-                }
+//        if (String.valueOf(f).equals("/storage/emulated")) {
+//            f = (new File("/storage/emulated/0"));
+   //     }
+        File[] files = f.listFiles();
+
+//        Log.i("proba f", String.valueOf(files.length));
+
+try {
+    for (File file : files) {
+        if (file.isFile() && file.getName().contains("raspored")) {
+            excels.add(file);
+
+        } else if (file.isDirectory()) {
+            if (!file.isHidden()) {
+                getFile(file.getAbsoluteFile());
             }
         }
-
-        return fList;
+    }
+}catch (Exception e){}
+       // return fList;
     }
 
     private void readFileXLS(File file) {

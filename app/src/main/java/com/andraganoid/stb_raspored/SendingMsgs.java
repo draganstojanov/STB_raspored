@@ -198,7 +198,7 @@ public class SendingMsgs extends AppCompatActivity {
                             @Override
                             public void run() {
 
-                                ((TextView) findViewById(R.id.success)).setText("Poruka poslato:    " + (msgForSending + 1) + " od " + msg);
+                                ((TextView) findViewById(R.id.success)).setText("Poruka poslato:     " + (msgForSending + 1) + " od " + msg);
                                 ((TextView) findViewById(R.id.total)).setText("SMS-ova poslato: " + (msgTotal + 1) + " od " + sms);
                                 ((TextView) findViewById(R.id.errors)).setText("Grešaka: " + msgError);
                                 sendmsg();
