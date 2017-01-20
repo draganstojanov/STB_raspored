@@ -5,18 +5,15 @@
     android:orientation="vertical">
 
     <EditText
+        android:id="@+id/tekst"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Dodaj tekst..."
-        android:id="@+id/tekst"
-        />
+        android:hint="Dodaj tekst..." />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAllCaps="false"
-        android:text="Pošalji"
         android:onClick="sendsms"
-
-        />
+        android:text="Pošalji"
+        android:textAllCaps="false" />
 </LinearLayout>

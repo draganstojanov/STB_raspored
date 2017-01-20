@@ -151,7 +151,6 @@ public class Send extends AppCompatActivity {
         ad.setPositiveButton("Pošalji", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
                 Intent i = new Intent(getApplicationContext(), SendingMsgs.class);
                 i.putExtra("sendTel", sendTel);
                 i.putExtra("sendMsg", sendMsg);

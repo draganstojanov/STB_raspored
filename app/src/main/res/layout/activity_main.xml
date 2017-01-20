@@ -1,15 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:orientation="vertical">
-
-<Button
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:textAllCaps="false"
-    android:text="Unesi nedeljni raspored"
-    android:onClick="readScheduleFile"
+    android:layout_height="match_parent">
 
-    />
-</LinearLayout>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="#f00"
+        android:onClick="readScheduleFile"
+        android:text=" Raspored za slanje "
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="#fff"
+        android:textSize="30dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:onClick="mailToMe"
+        android:text="Autor:\nDragan Stojanov\nandraganoid@gmail.com"
+        android:textAlignment="center" />
+
+</RelativeLayout>

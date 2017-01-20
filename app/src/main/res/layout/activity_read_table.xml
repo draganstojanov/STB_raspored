@@ -3,19 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-<TextView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:textSize="20dp"
-    android:text="Izaberi tabelu:"/>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="10dp"/>
-    <ListView
+
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/excels">
+        android:text="Izaberi tabelu:"
+        android:textSize="20dp" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+
+    <ListView
+        android:id="@+id/excels"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     </ListView>
 
 </LinearLayout>

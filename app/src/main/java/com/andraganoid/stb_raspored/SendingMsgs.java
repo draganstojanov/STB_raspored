@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
-
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
 import android.util.Log;
@@ -49,7 +48,6 @@ public class SendingMsgs extends AppCompatActivity {
     ProgressBar bar;
 
     public SendingMsgs() {
-
     }
 
     public SendingMsgs(String num, String txt, int msgNo, int smsNo) {
@@ -71,21 +69,12 @@ public class SendingMsgs extends AppCompatActivity {
         deliveredPI = PendingIntent.getBroadcast(this, 0, new Intent(DELIVERED), 0);
         sendTel = getIntent().getStringArrayListExtra("sendTel");
         sendMsg = getIntent().getStringArrayListExtra("sendMsg");
-
         sending();
     }
 
     void sending() {
-        sendTel.addAll(sendTel);
-        sendTel.addAll(sendTel);
-        sendTel.addAll(sendTel);
-        sendMsg.addAll(sendMsg);
-        sendMsg.addAll(sendMsg);
-        sendMsg.addAll(sendMsg);
-
         ((Button) findViewById(R.id.finish)).setVisibility(View.INVISIBLE);
         ((Button) findViewById(R.id.again)).setVisibility(View.INVISIBLE);
-
         msgError = 0;
         smslist.clear();
         msg = 0;
@@ -115,7 +104,6 @@ public class SendingMsgs extends AppCompatActivity {
 
     void sendmsg() {
         if (!smslist.isEmpty()) {
-
             sm = (SendingMsgs) smslist.get(0);
             msgForSending = sm.msgNo;
             msgTotal = sm.smsNo;
@@ -152,16 +140,13 @@ public class SendingMsgs extends AppCompatActivity {
 
 
     void waiting() {
-
         bartext.setVisibility(View.VISIBLE);
         bar.setVisibility((View.VISIBLE));
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-
                 progress = 0;
                 while (progress < 180) {
-
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
@@ -169,15 +154,11 @@ public class SendingMsgs extends AppCompatActivity {
                     }
                     progress++;
                     bar.setProgress(progress);
-
                 }
             }
         });
         thread.start();
-
-
     }
-
 
     class sms_receiver extends BroadcastReceiver {
         @Override
@@ -197,7 +178,6 @@ public class SendingMsgs extends AppCompatActivity {
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-
                                 ((TextView) findViewById(R.id.success)).setText("Poruka poslato:     " + (msgForSending + 1) + " od " + msg);
                                 ((TextView) findViewById(R.id.total)).setText("SMS-ova poslato: " + (msgTotal + 1) + " od " + sms);
                                 ((TextView) findViewById(R.id.errors)).setText("Grešaka: " + msgError);
