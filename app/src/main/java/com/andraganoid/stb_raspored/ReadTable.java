@@ -2,13 +2,15 @@ package com.andraganoid.stb_raspored;
 
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -32,24 +34,19 @@ public class ReadTable extends AppCompatActivity {
     private ArrayList<File> fList = new ArrayList<>();
     ArrayList<File> excels = new ArrayList<>();
     File f;
-    String[] root = {"/storage", "/storage/sdcard", "/sdcard", "/storage/sdcard0", "/storage/sdcard1", "/storage/emulated/0", "/mnt/sdcard"};
+    String[] root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_read_table);
-
-        fList.clear();
+        root = new String[]{getApplicationContext().getFilesDir().getAbsolutePath(), Environment.getExternalStorageDirectory().getAbsolutePath(), "/storage", "/storage/sdcard", "/storage/sdcard0", "/storage/sdcard1", "/storage/emulated/0", "/mnt", "/mnt/sdcard"};
         excels.clear();
+        new fileFinder().execute();
+    }
 
-        for (String r : root) {
-            f = new File(r);
-            Log.i("proba files", String.valueOf(f) + (f.exists()));
-            if (f.exists()) {
-                getFile(f);
-            }
-        }
-
+    void showfiles(ArrayList f) {
+        fList.addAll(f);
         switch (fList.size()) {
             case 0:
                 backToMain("Nema odgovarajuće tabele");
@@ -74,7 +71,6 @@ public class ReadTable extends AppCompatActivity {
                         }
                     }
                 }
-
                 ListView lv = (ListView) findViewById(R.id.excels);
                 ArrayAdapter<String> aa = new ArrayAdapter<>(this, android.R.layout.simple_list_item_activated_1, estr);
                 lv.setAdapter(aa);
@@ -84,24 +80,6 @@ public class ReadTable extends AppCompatActivity {
                         readFileXLS(excels.get(position));
                     }
                 });
-        }
-    }
-
-    private void getFile(File f) {
-        Log.i("proba f", String.valueOf(f));
-        File[] files = f.listFiles();
-        try {
-            for (File file : files) {
-                if (file.isFile() && file.getName().contains("stb_raspored")) {
-                    fList.add(file);
-
-                } else if (file.isDirectory()) {
-                    if (!file.isHidden()) {
-                        getFile(file.getAbsoluteFile());
-                    }
-                }
-            }
-        } catch (Exception e) {
         }
     }
 
@@ -153,4 +131,52 @@ public class ReadTable extends AppCompatActivity {
         Toast.makeText(this, s, Toast.LENGTH_LONG).show();
         startActivity(new Intent(this, MainActivity.class));
     }
+
+
+    private class fileFinder extends AsyncTask<String, Integer, ArrayList> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            ((ProgressBar) findViewById(R.id.readBar)).setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected ArrayList doInBackground(String... params) {
+            fList.clear();
+            for (String r : root) {
+                f = new File(r);
+                if (f.exists()) {
+                    getFile(f);
+                }
+            }
+            return fList;
+        }
+
+        private void getFile(File f) {
+            File[] files = f.listFiles();
+            try {
+                for (File file : files) {
+                    if (file.isFile() && file.getName().contains("stb_raspored")) {
+                        fList.add(file);
+
+                    } else if (file.isDirectory()) {
+                        if (!file.isHidden()) {
+                            getFile(file.getAbsoluteFile());
+                        }
+                    }
+                }
+            } catch (Exception e) {
+            }
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList a) {
+            super.onPostExecute(a);
+            ((ProgressBar) findViewById(R.id.readBar)).setVisibility(View.GONE);
+            showfiles(a);
+        }
+    }
 }
+
+
+

@@ -3,17 +3,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:id="@+id/aaa"
+        android:layout_centerInParent="true"
+        />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_above="@id/aaa"
         android:background="#f00"
         android:onClick="readScheduleFile"
         android:text=" Raspored za slanje "
+        android:layout_centerHorizontal="true"
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textColor="#fff"
         android:textSize="30dp" />
+
+
 
     <TextView
         android:layout_width="match_parent"

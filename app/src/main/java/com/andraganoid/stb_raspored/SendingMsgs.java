@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -107,7 +106,6 @@ public class SendingMsgs extends AppCompatActivity {
             sm = (SendingMsgs) smslist.get(0);
             msgForSending = sm.msgNo;
             msgTotal = sm.smsNo;
-            Log.i("proba sm", String.valueOf(msgForSending));
             tt = 1000;
             if (sent % 29 == 0 && sent > 28) {
                 tt = 180000;
@@ -119,12 +117,6 @@ public class SendingMsgs extends AppCompatActivity {
             unregisterReceiver(br);
             ((Button) findViewById(R.id.finish)).setVisibility(View.VISIBLE);
             if (msgError > 0) {
-                Log.i("proba NOT SEND", "pošalji ponovo");
-                for (String b : sendTel
-                        ) {
-                    Log.i("proba NOT SEND", b);
-                }
-                Log.i("proba not sent", String.valueOf((msgError)));
                 ((Button) findViewById(R.id.again)).setVisibility(View.VISIBLE);
             }
         }
@@ -168,7 +160,6 @@ public class SendingMsgs extends AppCompatActivity {
                     msgError++;
                     sendTel.add(sm.num);
                     sendMsg.add(sm.txt);
-                    Log.i("proba sent", "GREŠKA" + (msgForSending));
                 }
                 final Handler handler = new Handler();
                 final Timer timer = new Timer(false);
@@ -186,7 +177,6 @@ public class SendingMsgs extends AppCompatActivity {
                         });
                     }
                 };
-                Log.i("proba tt", String.valueOf(tt));
                 if (tt == 180000) {
                     waiting();
                 } else {
