@@ -10,13 +10,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -79,8 +79,13 @@ public class SendingMsgs extends AppCompatActivity {
         msg = 0;
         sms = 0;
         while (msg < sendMsg.size()) {
-            List<String> messages = smsm.divideMessage(sendMsg.get(msg));
-            for (String m : messages) {
+            Log.i("probaaa", sendMsg.get(msg));
+            String[] w = (sendMsg.get(msg)).split("#");
+            for (String m : w) {
+                if (m.startsWith("#")) {
+                    m = m.substring(1);
+                }
+                Log.i("proba", m);
                 smslist.add(new SendingMsgs(sendTel.get(msg), m, msg, sms));
                 sms++;
             }

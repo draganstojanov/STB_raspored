@@ -99,7 +99,7 @@ public class ReadTable extends AppCompatActivity {
 
                 while (sCellIter.hasNext()) {
                     HSSFCell sCell = (HSSFCell) sCellIter.next();
-                    sList.add(sCell.toString());
+                    sList.add(sCell.getStringCellValue());
                 }
             }
 
@@ -112,7 +112,7 @@ public class ReadTable extends AppCompatActivity {
                 while (pCellIter.hasNext()) {
                     HSSFCell p1Cell = (HSSFCell) pCellIter.next();
                     HSSFCell p2Cell = (HSSFCell) pCellIter.next();
-                    peopleMap.put((p1Cell.toString()).trim(), (p2Cell.toString()).replaceAll("[^0-9]", ""));
+                    peopleMap.put((p1Cell.getStringCellValue()).trim(), (p2Cell.getStringCellValue()).replaceAll("[^0-9]", ""));
                 }
             }
 

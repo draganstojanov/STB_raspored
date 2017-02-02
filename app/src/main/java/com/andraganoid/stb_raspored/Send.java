@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.SmsManager;
 import android.view.View;
 import android.widget.EditText;
 
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class Send extends AppCompatActivity {
@@ -33,9 +35,10 @@ public class Send extends AppCompatActivity {
     String firstDay;
     String[] dani = {"pon", "uto", "sre", "cet", "pet", "sub", "ned"};
     Calendar calendar = Calendar.getInstance();
-    StringBuilder sb;
+    StringBuilder sb, sb2, sbSplit;
     EditText et;
     HashMap<String, String> people;
+    SmsManager sm = SmsManager.getDefault();
 
     public Send() {
     }
@@ -120,6 +123,7 @@ public class Send extends AppCompatActivity {
     }
 
     public void sendsms(View v) {
+        sbSplit = new StringBuilder();
         String txt = et.getText().toString();
         sendTel.clear();
         sendMsg.clear();
@@ -128,16 +132,40 @@ public class Send extends AppCompatActivity {
             sendList = entry.getValue();
             String tel = people.get(ime);
             sb = new StringBuilder();
+            sbSplit.delete(0, sbSplit.length());
             setDate(firstDay, 0);
             sb.append("Vas raspored:\n" + new SimpleDateFormat("dd.MM.").format(calendar.getTime()));
             setDate(firstDay, 6);
             sb.append("-" + new SimpleDateFormat("dd.MM.").format(calendar.getTime()) + "\n");
+            sbSplit.append(sb);
+            sb2 = new StringBuilder();
             for (Object o : sendList) {
                 Send snd = (Send) o;
-                sb.append(dani[snd.day] + " ");
-                setDate(firstDay, snd.day);
-                sb.append(snd.shift + " ");
-                sb.append(snd.sector + " \n");
+
+                sbSplit.append(dani[snd.day] + " ");
+                sbSplit.append(snd.shift + " ");
+                sbSplit.append(snd.sector + " \n");
+                List<String> me = sm.divideMessage(sbSplit.toString());
+                if (me.size() > 1) {
+                    sb2.append("#");
+                    sbSplit.delete(0, sbSplit.length());
+                    sbSplit.append(dani[snd.day] + " ");
+                    sbSplit.append(snd.shift + " ");
+                    sbSplit.append(snd.sector + " \n");
+                }
+                sb2.append(dani[snd.day] + " ");
+                sb2.append(snd.shift + " ");
+                sb2.append(snd.sector + " \n");
+            }
+            if (sb2.length() == 0) {
+                sb2.append("Ove sedmice niste u rasporedu!");
+                sbSplit.append("Ove sedmice niste u rasporedu!");
+            }
+            sb.append(sb2);
+            sbSplit.append((txt));
+            List<String> me = sm.divideMessage(sbSplit.toString());
+            if (me.size() > 1) {
+                sb.append("#");
             }
             sb.append(txt);
             if (tel != null) {
@@ -147,7 +175,7 @@ public class Send extends AppCompatActivity {
         }
 
         AlertDialog.Builder ad = new AlertDialog.Builder(this);
-        ad.setMessage("Poruka za slanje: " + sendTel.size());
+        ad.setMessage("Potvrdi slanje");
         ad.setPositiveButton("Pošalji", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
